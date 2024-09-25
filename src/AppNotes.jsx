@@ -7,14 +7,10 @@ import { StatusBar } from 'react-native';
 export const AppNotes = () => {
   return (
     <PaperProvider theme={ DefaultTheme }>
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar translucent backgroundColor="#69676a" />
       <NavigationContainer>
-
         <StackNavigator />
-
       </NavigationContainer>
-
-
     </PaperProvider>
 
   );

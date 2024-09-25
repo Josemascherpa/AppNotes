@@ -7,6 +7,7 @@ export const ProfileScreen = () => {
   const [ text, setText ] = useState( '' );
   return (
     <View style={ { backgroundColor: "black", flex: 1 } }>
+      
       <TextInput        
         label="Email"
         mode="outlined"
