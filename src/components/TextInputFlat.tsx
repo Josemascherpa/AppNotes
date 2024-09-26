@@ -26,11 +26,11 @@ interface Props {
   padding?: number;
   textColorInput?: string;
   value:string;
-  onChange: (text: string) => void;
+  onChangeText: (text: string) => void;
 }
 
 
-export const TextInputFlat = ( { title, labelTextInput, style, isPassword, keyboardType = "default", colorLabel, colorTitle, paddingRight = 20, padding = 10, textColorInput = "black",onChange,value=""}: Props ) => {
+export const TextInputFlat = ( { title, labelTextInput, style, isPassword, keyboardType = "default", colorLabel, colorTitle, paddingRight = 20, padding = 10, textColorInput = "black",onChangeText,value=""}: Props ) => {
 
   return (
     <View style={ { flexDirection: "row", padding: padding, alignItems: "center", justifyContent: "center" } }>
@@ -47,7 +47,7 @@ export const TextInputFlat = ( { title, labelTextInput, style, isPassword, keybo
         keyboardType={ keyboardType }
         textColor={ textColorInput }
         value={value}
-        onChangeText={onChange} 
+        onChangeText={onChangeText} 
       />
     </View>
   );

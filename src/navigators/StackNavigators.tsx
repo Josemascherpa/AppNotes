@@ -22,13 +22,22 @@ export const StackNavigator = () => {
         } }
         name="StartScreen"
         component={ StartScreen } />
-      <Stack.Screen name="HomeScreen" component={ HomeScreen } />
-      <Stack.Screen name="MyProfile" component={ ProfileScreen } />
       <Stack.Screen
         options={ {
           headerShown: false,
         } }
-        name="RegisterScreen" component={ RegisterScreen }
+        name="HomeScreen"
+        component={ HomeScreen } />
+        {/* podria ser otro stack */}
+      <Stack.Screen
+        name="MyProfile"
+        component={ ProfileScreen } />
+      <Stack.Screen
+        options={ {
+          headerShown: false,
+        } }
+        name="RegisterScreen"
+        component={ RegisterScreen }
       />
     </Stack.Navigator>
   );

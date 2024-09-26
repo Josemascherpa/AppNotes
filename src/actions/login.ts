@@ -3,27 +3,25 @@
 // }
 
 import { notesApi } from '../config/notesApi';
-import { User } from '../domain/user';
+import { UserLogin } from '../domain/user';
 
 interface ResponseData{
   auth:boolean;
   token:string;
 }
 
-
-export const verifyRegister = async ( user:User ):Promise<ResponseData> => {
-
+export const verifyLogin = async ( userLogin:UserLogin ):Promise<ResponseData> => {
   try {
     // await sleep();    
-    const url = "/register";
+    const url = "/signin";
     
-    const { data } = await notesApi.post<ResponseData>( url, user );    
+    const { data } = await notesApi.post<ResponseData>( url, userLogin );    
     
-    console.log(data);
+    
     return data;
 
   } catch ( error ) {    
-    throw new Error( "Error registrando el usuario" );
+    throw new Error( "Error logueando el usuario" );
 
   }
 

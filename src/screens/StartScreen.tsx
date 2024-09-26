@@ -1,18 +1,50 @@
-import { Dimensions, Image, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, KeyboardAvoidingView, Platform, StyleSheet, View, TextStyle, Alert } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { type NavigationProp, useNavigation } from '@react-navigation/native';
 import { type RootStackParamList } from '../navigators/StackNavigators';
 import { globalColors } from '../themes/theme';
+import { verifyLogin } from '../actions/login';
+import { UserLogin } from '../domain/user';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 
 const { width } = Dimensions.get( "window" ); //obtener ancho 
 
 export const StartScreen = () => {
 
+  const [ email, setEmail ] = useState( "" );
+  const [ password, setPassword ] = useState( "" );
+  const [ user, setUser ] = useState<UserLogin>();
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleRegister = async () => {
+    if( email === "" || password === "" ){
+      Alert.alert( 'Error', 'Todos los campos son obligatorios' );
+      return;
+    }
+    const user: UserLogin = {//creo usuario        
+      email,
+      password
+    };
+
+    try {
+      const responseData = await verifyLogin( user ); // 
+
+      setUser( user );//lo guardo
+
+      //Deberia guardar token en local storage      
+      Alert.alert( 'Login Exitoso', `Bienvenido, ${ email }` );
+      navigation.navigate( "HomeScreen" );
+    } catch ( error ) {
+      Alert.alert( 'Error', 'Ocurrió un error durante el registro' );
+    }
+
+
+  };
 
   return (
     <KeyboardAvoidingView // para que usuarios de ios no se les bugee el scroll
@@ -25,7 +57,7 @@ export const StartScreen = () => {
         <View style={ { flex: 1 } }>
 
           {/* contenedor texts */ }
-          <View style={ { flex: 0.1, alignItems: 'center', backgroundColor:globalColors.backgroundColor, marginVertical: 10 } }>
+          <View style={ { flex: 0.1, alignItems: 'center', backgroundColor: globalColors.backgroundColor, marginVertical: 10 } }>
             <Text style={ styles.welcome }>Welcome to the</Text>
             <Text style={ styles.appnotes }>AppNotes</Text>
           </View >
@@ -43,6 +75,8 @@ export const StartScreen = () => {
               placeholder="Type something"
               outlineColor="black"
               activeOutlineColor="black"
+              value={ email }
+              onChangeText={ setEmail }
             />
             <TextInput
               style={ { height: 40, width: width * 0.8, marginBottom: 3 } }
@@ -52,11 +86,13 @@ export const StartScreen = () => {
               outlineColor="black"
               activeOutlineColor="black"
               secureTextEntry
+              value={ password }
+              onChangeText={ setPassword }
             />
             <Button
               mode="contained"
-              style={ { marginTop: 8, width: width * 0.4, borderRadius: 5, backgroundColor: globalColors.buttonBackgroundColor, marginBottom: 12 } }
-              onPress={ () => console.log( 'Pressed' ) }>
+              style={ { marginTop: 8, width: width * 0.4, borderRadius: 5, backgroundColor: globalColors.buttonBackgroundColor, marginBottom: 5 } }
+              onPress={ () => handleRegister() }>
               Login
             </Button>
 
@@ -64,8 +100,9 @@ export const StartScreen = () => {
               onPress={ () => navigation.navigate( "RegisterScreen" ) }
               mode="text"
               textColor="white"
-              contentStyle={ { borderBottomWidth: 1, borderBottomColor: 'white', width: width * 0.45, height: 35 } }
+              contentStyle={ { borderBottomWidth: 1, borderBottomColor: 'white', width: 180, height: 35 } }
               rippleColor="transparent"
+              style={ { borderRadius: 5, } }
             >
               Don't have an account?
             </Button>

@@ -11,6 +11,7 @@ import { Button } from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { User } from '../domain/user';
+import { verifyRegister } from '../actions/register';
 
 
 const { width } = Dimensions.get( "window" ); //obtener ancho 
@@ -24,9 +25,13 @@ export const RegisterScreen = () => {
   const [ email, setEmail ] = useState( "" );
   const [ password, setPassword ] = useState( "" );
   const [ rePassword, setRePassword ] = useState( "" );
-  const [ user, setUser ] = useState<User | null>( null );
+  const [ user, setUser ] = useState<User>();
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    if ( name === "" || email === "" || password === "" || rePassword === "" ) {
+      Alert.alert( 'Error', 'Todos los campos son obligatorios' );
+      return;
+    }
     if ( password !== rePassword ) {
       Alert.alert( 'Error', 'Las contraseñas no coinciden' );
       return;
@@ -38,7 +43,17 @@ export const RegisterScreen = () => {
       password
     };
     setUser( newUser );//lo guardo
-    Alert.alert( 'Registro Exitoso', `Bienvenido, ${ name }` );
+
+    try {
+      const responseData = await verifyRegister( newUser ); // Pasa el nuevo usuario a verifyRegister
+      //Deberia guardar token en local storage
+      Alert.alert( 'Registro Exitoso', `Bienvenido, ${ name }` );
+      navigation.navigate( "HomeScreen" );
+    } catch ( error ) {
+      Alert.alert( 'Error', 'Ocurrió un error durante el registro' );
+    }
+
+
   };
 
 
@@ -48,7 +63,7 @@ export const RegisterScreen = () => {
       behavior={ Platform.OS === "ios" ? "padding" : undefined }
       style={ { flex: 1, backgroundColor: globalColors.backgroundColor } }
     >
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <View style={ { flex: 0.3, backgroundColor: globalColors.backgroundColor, paddingTop: top } }>
           <Pressable
             onPress={ () => navigation.goBack() }
@@ -72,10 +87,10 @@ export const RegisterScreen = () => {
 
 
         <View style={ { flex: 1, alignItems: "center", justifyContent: "center", marginTop: 30 } }>
-          <TextInputFlat value={ name } onChange={ setName } textColorInput="white" padding={ 15 } paddingRight={ 48 } labelTextInput="name" title="Name" isPassword={ false } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } style={ { backgroundColor: globalColors.backgroundColor } } />
-          <TextInputFlat value={ email } onChange={ setEmail } textColorInput="white" padding={ 15 } paddingRight={ 48 } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } labelTextInput="example@mail.com" title="Email" isPassword={ false } keyboardType="email-address" style={ { backgroundColor: globalColors.backgroundColor } } />
-          <TextInputFlat value={ password } onChange={ setPassword } textColorInput="white" padding={ 15 } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } labelTextInput="password" title="Password" isPassword={ true } style={ { backgroundColor: globalColors.backgroundColor } } />
-          <TextInputFlat value={ rePassword } onChange={ setRePassword } textColorInput="white" padding={ 15 } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } labelTextInput="password" title="Repeat Password" isPassword={ true } style={ { backgroundColor: globalColors.backgroundColor } } />
+          <TextInputFlat value={ name } onChangeText={ setName } textColorInput="white" padding={ 15 } paddingRight={ 48 } labelTextInput="name" title="Name" isPassword={ false } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } style={ { backgroundColor: globalColors.backgroundColor } } />
+          <TextInputFlat value={ email } onChangeText={ setEmail } textColorInput="white" padding={ 15 } paddingRight={ 48 } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } labelTextInput="example@mail.com" title="Email" isPassword={ false } keyboardType="email-address" style={ { backgroundColor: globalColors.backgroundColor } } />
+          <TextInputFlat value={ password } onChangeText={ setPassword } textColorInput="white" padding={ 15 } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } labelTextInput="password" title="Password" isPassword={ true } style={ { backgroundColor: globalColors.backgroundColor } } />
+          <TextInputFlat value={ rePassword } onChangeText={ setRePassword } textColorInput="white" padding={ 15 } colorTitle={ globalColors.buttonTextColor } colorLabel={ globalColors.buttonTextColor } labelTextInput="password" title="Repeat Password" isPassword={ true } style={ { backgroundColor: globalColors.backgroundColor } } />
         </View>
 
 
@@ -87,6 +102,7 @@ export const RegisterScreen = () => {
             Register
           </Button>
         </View>
+
       </ScrollView>
     </KeyboardAvoidingView>
 
