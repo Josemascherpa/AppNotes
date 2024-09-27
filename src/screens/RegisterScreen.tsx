@@ -29,11 +29,11 @@ export const RegisterScreen = () => {
 
   const handleRegister = async () => {
     if ( name === "" || email === "" || password === "" || rePassword === "" ) {
-      Alert.alert( 'Error', 'Todos los campos son obligatorios' );
+      Alert.alert( 'Error', 'All fields are required' );
       return;
     }
     if ( password !== rePassword ) {
-      Alert.alert( 'Error', 'Las contraseñas no coinciden' );
+      Alert.alert( 'Error', 'Passwords do not match' );
       return;
     }
 
@@ -47,13 +47,12 @@ export const RegisterScreen = () => {
     try {
       const responseData = await verifyRegister( newUser ); // Pasa el nuevo usuario a verifyRegister
       //Deberia guardar token en local storage
-      Alert.alert( 'Registro Exitoso', `Bienvenido, ${ name }` );
+      Alert.alert( 'Registration Successful', `Welcome, ${ name }` );
       navigation.navigate( "HomeScreen" );
     } catch ( error ) {
-      Alert.alert( 'Error', 'Ocurrió un error durante el registro' );
+      // Asegúrate de que el error sea de tipo Error para acceder a error.message
+      Alert.alert( 'Error', error instanceof Error ? error.message : "An unexpected error occurred" );
     }
-
-
   };
 
 

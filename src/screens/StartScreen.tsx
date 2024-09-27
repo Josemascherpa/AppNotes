@@ -21,26 +21,26 @@ export const StartScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const handleRegister = async () => {
-    if( email === "" || password === "" ){
-      Alert.alert( 'Error', 'Todos los campos son obligatorios' );
+  const handleLogin = async () => {
+    if ( email === "" || password === "" ) {
+      Alert.alert( 'Error', 'All fields are required' );
       return;
     }
     const user: UserLogin = {//creo usuario        
       email,
-      password
+      password,
     };
 
     try {
+      setUser(user);
       const responseData = await verifyLogin( user ); // 
-
-      setUser( user );//lo guardo
-
+      
       //Deberia guardar token en local storage      
-      Alert.alert( 'Login Exitoso', `Bienvenido, ${ email }` );
+      Alert.alert( 'Login Successful', `Welcome, ${ responseData.name }` );
       navigation.navigate( "HomeScreen" );
     } catch ( error ) {
-      Alert.alert( 'Error', 'Ocurrió un error durante el registro' );
+      // Asegúrate de que el error sea de tipo Error para acceder a error.message
+      Alert.alert( 'Error', error instanceof Error ? error.message : "An unexpected error occurred" );
     }
 
 
@@ -51,7 +51,7 @@ export const StartScreen = () => {
       behavior={ Platform.OS === "ios" ? "padding" : undefined }
       style={ { flex: 1, backgroundColor: globalColors.backgroundColor } }
     >
-      <ScrollView style={ { flex: 1 } } contentContainerStyle={ { flexGrow: 1 } }>
+      <ScrollView style={ { flex: 1 } } contentContainerStyle={ { flexGrow: 1 }  } keyboardShouldPersistTaps="handled">
 
         {/* container background */ }
         <View style={ { flex: 1 } }>
@@ -76,7 +76,9 @@ export const StartScreen = () => {
               outlineColor="black"
               activeOutlineColor="black"
               value={ email }
+              keyboardType="email-address"
               onChangeText={ setEmail }
+              autoCapitalize="none"
             />
             <TextInput
               style={ { height: 40, width: width * 0.8, marginBottom: 3 } }
@@ -88,11 +90,12 @@ export const StartScreen = () => {
               secureTextEntry
               value={ password }
               onChangeText={ setPassword }
+              autoCapitalize="none"
             />
             <Button
               mode="contained"
               style={ { marginTop: 8, width: width * 0.4, borderRadius: 5, backgroundColor: globalColors.buttonBackgroundColor, marginBottom: 5 } }
-              onPress={ () => handleRegister() }>
+              onPress={ () => handleLogin() }>
               Login
             </Button>
 

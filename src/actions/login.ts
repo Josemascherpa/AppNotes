@@ -8,6 +8,7 @@ import { UserLogin } from '../domain/user';
 interface ResponseData{
   auth:boolean;
   token:string;
+  name:string;
 }
 
 export const verifyLogin = async ( userLogin:UserLogin ):Promise<ResponseData> => {
@@ -20,8 +21,14 @@ export const verifyLogin = async ( userLogin:UserLogin ):Promise<ResponseData> =
     
     return data;
 
-  } catch ( error ) {    
-    throw new Error( "Error logueando el usuario" );
+  } catch ( error:any ) {    
+    if ( error.response.data.errors ) {
+      const errorMessages = error.response.data.errors
+        .map( ( err: { msg: string; } ) => err.msg )
+        .join( ", " );
+      throw new Error( errorMessages );
+    }
+    throw new Error( error.response.data.message || "Wrong email or password" );
 
   }
 

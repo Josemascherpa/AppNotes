@@ -48,6 +48,7 @@ export const TextInputFlat = ( { title, labelTextInput, style, isPassword, keybo
         textColor={ textColorInput }
         value={value}
         onChangeText={onChangeText} 
+        autoCapitalize="none"
       />
     </View>
   );
