@@ -1,48 +1,59 @@
 
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
-
-import { Alert, BackHandler, Button, Dimensions, FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, BackHandler, Dimensions, FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View, StyleProp } from 'react-native';
 import { RootStackParamList } from '../navigators/StackNavigators';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { globalColors } from '../themes/theme';
+import { addNote, getNotes } from '../context/notesStore';
+import { Button } from 'react-native-paper';
+
 
 
 interface Notes {
+  id: string;
   title: string;
   content: string;
 }
 
-const { width } = Dimensions.get( "window" ); //obtener ancho 
+const { width, height } = Dimensions.get( "window" );
 export const HomeScreen = () => {
-
-  const [ notes, setNotes ] = useState<Notes[]>( [] );//array con todas las notas
-  const [ note, setNote ] = useState<Notes>( { title: 'title', content: 'write' } );
-  const [ isModalVisible, setIsModalVisible ] = useState( false );
+  const [ notes, setNotes ] = useState<Notes[]>( [] );//deberia llamar al getnotes para obtener el array de notas
   const { top } = useSafeAreaInsets();
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigator = useNavigation<NavigationProp<RootStackParamList>>();
 
-  //Nueva nota
-  const addNote = () => {
-    setNotes( [ ...notes, note ] ); // Agregar la nota al arreglo de notas       
+  useFocusEffect(//cada vez que vengo a esta pantalla, actualizo
+    useCallback( () => {
+      setNotes( [ ...getNotes() ] );
+    }, [] )
+  );
+  const handleAddNote = () => {
+    const newNote = addNote( "", "" );
+    setNotes( [ ...getNotes() ] );
+    if ( newNote ) {
+      navigator.navigate( "NoteScreen", {
+        id: newNote.id.toString(),
+      } );
+    } else {
+      console.error( "Error al agregar la nota" );
+    }
   };
 
-  // Función para renderizar cada nota
+  // como dibujo cada nota
   const renderNote = ( { item }: { item: Notes; } ) => (
-    <Pressable onPress={ () => navigation.navigate( "NoteScreen" ) }>
+    <Pressable onPress={ () => navigator.navigate( "NoteScreen", {
+      id: item.id,
+    } ) }>
       <View style={ styles.noteCard } >
         <Text style={ styles.noteTitle }>{ item.title }</Text>
         <Text style={ styles.noteContent }>{ item.content }</Text>
       </View>
     </Pressable>
-
   );
-
-
   const logout = async () => {
     // await AsyncStorage.removeItem( 'token' ); // Ejemplo para eliminar el token almacenado
-    navigation.navigate( "StartScreen" ); // Navegar a la pantalla de inicio de sesión
+    navigator.navigate( "StartScreen" );
   };
 
   useEffect( () => {
@@ -67,23 +78,38 @@ export const HomeScreen = () => {
   }, [] );
 
   return (
-    <ScrollView style={ { flex: 1, paddingTop: top, backgroundColor: globalColors.backgroundColor, padding: 5 } } keyboardShouldPersistTaps="handled">
-      <Button title="Add Note" onPress={ () => addNote() } />
-      <FlatList
-        data={ notes }
-        keyExtractor={ ( _, index ) => index.toString() }
-        renderItem={ renderNote }
-        contentContainerStyle={ { paddingBottom: 20 } }
-        numColumns={ 2 } // Especificar cuántas columnas (en este caso, 2 columnas)
-        columnWrapperStyle={ { justifyContent: 'space-between' } } // Estilo para distribuir las notas
-      />
+    <View style={ { flex: 1 } }>
 
-    </ScrollView>
+      <FlatList
+        style={ { flex:1} }
+        contentContainerStyle={{flexGrow:1,padding:5,paddingTop:top}}
+        data={ notes }
+        keyExtractor={ item => item.id }
+        renderItem={ renderNote }
+        numColumns={ 2 }
+        columnWrapperStyle={ { justifyContent: 'space-between' } }
+      />
+      
+
+      {/* Contenedor para el botón */ }
+      <View style={ { flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end', position: 'absolute', bottom: 20, right: 20, backgroundColor: "red" } }>
+        <Button
+          onPress={ () => handleAddNote() }
+          style={ {
+            backgroundColor: 'red',
+            width: 50,
+            height: 50,
+            justifyContent: 'center', // Centra el texto en el botón
+            alignItems: 'center',     // Centra el texto en el botón
+          } }
+        >+</Button>
+      </View>
+      
+    </View>
+
   );
 };
 
-
-// Estilos
 const styles = StyleSheet.create( {
   noteCard: {
     width: width * 0.47,
@@ -101,8 +127,9 @@ const styles = StyleSheet.create( {
   },
   noteContent: {
     marginTop: 5,
+    flex: 1,
     fontSize: 14,
-    color: "black"
+    color: "black",
   },
   modalView: {
     flex: 1,

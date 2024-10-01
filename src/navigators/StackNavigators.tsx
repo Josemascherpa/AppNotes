@@ -10,7 +10,9 @@ export type RootStackParamList = {
   HomeScreen: undefined,
   MyProfile: undefined,
   RegisterScreen: undefined,
-  NoteScreen: undefined,
+  NoteScreen: {
+    id:string,    
+  }
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
