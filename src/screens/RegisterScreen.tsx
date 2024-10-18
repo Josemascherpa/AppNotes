@@ -12,6 +12,7 @@ import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { User } from '../domain/user';
 import { verifyRegister } from '../actions/register';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const { width } = Dimensions.get( "window" ); //obtener ancho 
@@ -40,13 +41,17 @@ export const RegisterScreen = () => {
     const newUser: User = {//creo usuario
       name,
       email,
-      password
+      password,
+      notes:[],
     };
     setUser( newUser );//lo guardo
 
     try {
       const responseData = await verifyRegister( newUser ); // Pasa el nuevo usuario a verifyRegister
       //Deberia guardar token en local storage
+      AsyncStorage.setItem("userToken",responseData.token);
+      AsyncStorage.setItem("userId",responseData.id);
+      
       Alert.alert( 'Registration Successful', `Welcome, ${ name }` );
       navigation.navigate( "HomeScreen" );
     } catch ( error ) {

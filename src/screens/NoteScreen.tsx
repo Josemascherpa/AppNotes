@@ -1,115 +1,114 @@
-
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { Alert, Dimensions, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
 import { RootStackParamList } from '../navigators/StackNavigators';
-import { Button, TextInput, } from 'react-native-paper';
-import { findNoteById, Note, removeNote, updateNoteContent, updateNoteTitle } from '../context/notesStore';
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { Toolbar, useEditorBridge, RichText } from '@10play/tentap-editor';
+import { Text, TextInput } from 'react-native-paper';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { debounce } from 'lodash';
+import { addNote, getNotes, removeNote, updateNote } from '../context/notesStore';
+import { globalColors } from '../themes/theme';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
 
+const { width } = Dimensions.get("window");
 
-const { width } = Dimensions.get( "window" );
 export const NoteScreen = () => {
-
   const params = useRoute<RouteProp<RootStackParamList, "NoteScreen">>().params;
   const navigation = useNavigation();
-  const note: Note | undefined = findNoteById( params.id );
-  const [ title, setTitle ] = useState( note?.title || "" );
-  const [ content, setContent ] = useState( note?.content || "" );
+  const [title, setTitle] = useState(params.title || "");
+  const [isNewNote, setIsNewNote] = useState<boolean>(false);
+  const [content, setContent] = useState(params.content || "");
+  const [newId, setId] = useState(params.id);
 
-  const handleUpdateNoteContent = useCallback( debounce( async () => {//oara que no se llame constantemente
-    if ( note ) {
-      const editorContent = await editor.getHTML();
-      setContent( editorContent );
-      updateNoteContent( note.id, editorContent );
-    }
-  }, 600 ), [ note ] );
-  const handleRemoveNote = () => {
-    removeNote( params.id );
+  const editorRef = useRef<RichEditor>(null);
 
-    if ( navigation.canGoBack() ) {
-      navigation.goBack();
-    }
+  const handleUpdateNoteContent = useCallback(debounce(async (id: string = newId) => {
+    await updateNote(params.userId, id, title, content);
+  }, 100), [title, content]);
 
-  };
-  const handleError = ( message: string ) => {
-    console.error( message );
+  const handleRemoveNote = async () => {
+    await removeNote(params.userId, params.id);
     navigation.goBack();
   };
 
-  const editor = useEditorBridge( {
-    autofocus: false,
-    avoidIosKeyboard: true,
-    initialContent: content,
-    onChange: async () => {
-      if ( note != undefined ) {
-        await handleUpdateNoteContent();
-      }
-    },
-  } );
-
-  useLayoutEffect( () => {
-    if ( !note ) {
-      handleError( "no note found" );
-      if(navigation.canGoBack()){
-        navigation.goBack();
-      }
-      return;
+  useEffect(() => {
+    if (title === "") {
+      setIsNewNote(true);
     }
-    navigation.setOptions( {
+  }, []);
+
+  useEffect(() => {
+    const updateOrAddNote = async () => {
+      if (title !== "" && isNewNote) {
+        setIsNewNote(false);
+        await addNote(params.userId, title, content);
+        const newId = await getNotes(params.userId);
+        setId(newId[newId.length - 1]._id);
+      } else if (!isNewNote && title !== "") {
+        await handleUpdateNoteContent(newId);
+      }
+    };
+    updateOrAddNote();
+  }, [title, content]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
       headerTitle: () => (
         <TextInput
-          value={ title }
-          onChangeText={ setTitle }
-          style={ { color: 'black', fontSize: 20, width: width * 0.7, backgroundColor: "transparent", borderWidth: 0, borderBottomWidth: 0 } }
+          value={title}
+          onChangeText={setTitle}
+          style={{ fontSize: 20, width: width * 0.7, backgroundColor: "transparent", borderWidth: 0, borderBottomWidth: 0 }}
+          textColor="#cdcdcd"
           placeholder="Write title"
+          placeholderTextColor="#cdcdcd"
           underlineColor="transparent"
-          underlineStyle={ { height: 0 } }
+          underlineStyle={{ height: 0 }}
         />
       ),
-    } );
-    if ( note != undefined ) {
-      updateNoteTitle( note.id, title );
-    }
-
-  }, [ navigation, note, title ] );
-
-
-  useEffect( () => {//si o si un titulo
-    const unsubscribe = navigation.addListener( 'beforeRemove', ( e ) => {
-      if ( title === "" && content === "" && navigation.canGoBack() ) {
-        removeNote( params.id );
-      }
-    } );
-    return unsubscribe;
-    // Limpieza del listener
-  }, [ title ] );
-
+      headerStyle: {
+        backgroundColor: globalColors.backgroundColor
+      },
+      headerTintColor: "#cdcdcd",
+    });
+  }, [navigation, title]);
 
   return (
-    <View style={ { flex: 1 } }>
-      {/* <Text style={ { color: "black" } }>{ params.id }</Text> */ }
-      <RichText editor={ editor } />
-
+    <View style={{ flex: 1 }}>
+      <RichEditor
+        ref={editorRef}
+        initialContentHTML={content}
+        placeholder="Write something here..."
+        onChange={setContent}
+        editorStyle={{ backgroundColor: globalColors.backgroundColor }}
+        style={{flex:1}}
+      />
       <KeyboardAvoidingView
-        behavior={ Platform.OS === 'ios' ? 'padding' : undefined }
-        style={ {
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{
           position: 'absolute',
           width: '100%',
           bottom: 0,
-        } }
+        }}
       >
-        <Button
-          mode="contained"
-          onPress={ () => handleRemoveNote() }
-          style={ { width: 10, height: 40, alignSelf: "flex-end", margin: 10 } }
-        > -</Button>
-        {/* //icono basurero */ }
-        <Toolbar editor={ editor } />
-
+        {title !== "" && (
+          <Pressable
+            onPress={async () => await handleRemoveNote()}
+            style={{
+              width: 52,
+              height: 50,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#cdcdcd",
+              borderRadius: 25,
+              position: "absolute",
+              bottom: 48,
+              right: 20,
+            }}
+          >
+            <Icon name="trash-outline" size={25} color="black" style={{ alignSelf: "center", paddingRight: 2 }} />
+          </Pressable>
+        )}        
+        <RichToolbar editor={editorRef} />
       </KeyboardAvoidingView>
-
-    </View >
+    </View>
   );
 };

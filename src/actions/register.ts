@@ -9,6 +9,7 @@ import { User } from '../domain/user';
 interface ResponseData {
   auth: boolean;
   token: string;
+  id: string;
 }
 
 

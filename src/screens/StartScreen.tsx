@@ -1,14 +1,14 @@
-import { Dimensions, Image, KeyboardAvoidingView, Platform, StyleSheet, View, TextStyle, Alert } from 'react-native';
+import { Dimensions, Image, KeyboardAvoidingView, Platform, StyleSheet, View, Alert } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
-
-import React, { useState } from 'react';
+import React, { useCallback,  useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { type NavigationProp, useNavigation } from '@react-navigation/native';
+import { type NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { type RootStackParamList } from '../navigators/StackNavigators';
 import { globalColors } from '../themes/theme';
 import { verifyLogin } from '../actions/login';
 import { UserLogin } from '../domain/user';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const { width } = Dimensions.get( "window" ); //obtener ancho 
@@ -18,8 +18,15 @@ export const StartScreen = () => {
   const [ email, setEmail ] = useState( "" );
   const [ password, setPassword ] = useState( "" );
   const [ user, setUser ] = useState<UserLogin>();
-
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+
+  useFocusEffect(//cada vez que vengo a esta pantalla, actualizo
+    useCallback( () => {
+      setEmail( "" );
+      setPassword( "" );      
+    }, [] )
+  );
 
   const handleLogin = async () => {
     if ( email === "" || password === "" ) {
@@ -32,38 +39,36 @@ export const StartScreen = () => {
     };
 
     try {
-      setUser(user);
+      setUser( user );
       const responseData = await verifyLogin( user ); // 
-      
-      //Deberia guardar token en local storage      
+      await AsyncStorage.setItem( 'userToken', responseData.token );
+      await AsyncStorage.setItem( 'userId', responseData.id );      
       Alert.alert( 'Login Successful', `Welcome, ${ responseData.name }` );
       navigation.navigate( "HomeScreen" );
-    } catch ( error ) {
-      // Asegúrate de que el error sea de tipo Error para acceder a error.message
-      Alert.alert( 'Error', error instanceof Error ? error.message : "An unexpected error occurred" );
+    } catch ( error ) {      
+      Alert.alert( 'Error asdfasd', error instanceof Error ? error.message : "An unexpected error occurred" );
     }
-
-
   };
+
 
   return (
     <KeyboardAvoidingView // para que usuarios de ios no se les bugee el scroll
       behavior={ Platform.OS === "ios" ? "padding" : undefined }
       style={ { flex: 1, backgroundColor: globalColors.backgroundColor } }
     >
-      <ScrollView style={ { flex: 1 } } contentContainerStyle={ { flexGrow: 1 }  } keyboardShouldPersistTaps="handled">
+      <ScrollView style={ { flex: 1 } } contentContainerStyle={ { flexGrow: 1 } } keyboardShouldPersistTaps="handled">
 
         {/* container background */ }
         <View style={ { flex: 1 } }>
 
           {/* contenedor texts */ }
-          <View style={ { flex: 0.1, alignItems: 'center', backgroundColor: globalColors.backgroundColor, marginVertical: 10 } }>
+          <View style={ { flex: 0.1, alignItems: 'center', backgroundColor: globalColors.backgroundColor, marginVertical: 28 } }>
             <Text style={ styles.welcome }>Welcome to the</Text>
             <Text style={ styles.appnotes }>AppNotes</Text>
           </View >
 
           <View style={ { flex: 0.2, backgroundColor: globalColors.backgroundColor } }>
-            <Image source={ require( '../assets/background3.jpeg' ) } style={ { height: width * 0.7, width: width } } resizeMode="cover" />
+            <Image source={ require( '../assets/background3.jpeg' ) } style={ { height: width * 0.6, width: width } } resizeMode="cover" />
           </View>
 
           {/* Contenedor de inputs */ }
@@ -94,7 +99,7 @@ export const StartScreen = () => {
             />
             <Button
               mode="contained"
-              style={ { marginTop: 8, width: width * 0.4, borderRadius: 5, backgroundColor: globalColors.buttonBackgroundColor, marginBottom: 5 } }
+              style={ { marginTop: 15, width: width * 0.4, borderRadius: 5, backgroundColor: globalColors.buttonBackgroundColor, marginBottom: 5 } }
               onPress={ () => handleLogin() }>
               Login
             </Button>

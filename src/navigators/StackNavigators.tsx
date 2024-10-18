@@ -11,8 +11,11 @@ export type RootStackParamList = {
   MyProfile: undefined,
   RegisterScreen: undefined,
   NoteScreen: {
-    id:string,    
-  }
+    userId:string,
+    id: string,
+    title:string,
+    content:string,
+  };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -24,15 +27,17 @@ export const StackNavigator = () => {
         options={ {
           headerShown: false,
         } }
-        name="HomeScreen"
-        component={ HomeScreen } />
-      {/* podria ser otro stack */ }
+        name="StartScreen"
+        component={ StartScreen } />
+        
       <Stack.Screen
         options={ {
           headerShown: false,
         } }
-        name="StartScreen"
-        component={ StartScreen } />
+        name="HomeScreen"
+        component={ HomeScreen } />
+      {/* podria ser otro stack */ }
+
       <Stack.Screen
         name="MyProfile"
         component={ ProfileScreen } />
@@ -43,7 +48,7 @@ export const StackNavigator = () => {
         name="RegisterScreen"
         component={ RegisterScreen }
       />
-      <Stack.Screen        
+      <Stack.Screen
         name="NoteScreen"
         component={ NoteScreen }
       />

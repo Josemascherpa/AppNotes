@@ -9,6 +9,7 @@ interface ResponseData{
   auth:boolean;
   token:string;
   name:string;
+  id:string;
 }
 
 export const verifyLogin = async ( userLogin:UserLogin ):Promise<ResponseData> => {
