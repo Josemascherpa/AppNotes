@@ -34,7 +34,13 @@ Aplicacion desarrollada con React native y Typescript, con el fin de poder tu pr
   <li>Async Storage:para guardar datos en el movil.</li>
   </ul>            
 
+  <div align="center">
+  <b>:camera:Imagenes::camera:</b>
+</div>
 
+<img src="/src/assets/imagesReadme/1.png" width="700" height="500"/>
+<img src="/src/assets/imagesReadme/3.jpg" width="700" height="500"/>
+<img src="/src/assets/imagesReadme/2.jpg" width="700" height="500"/>
   
   
 
