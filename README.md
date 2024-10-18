@@ -41,9 +41,14 @@ Aplicacion desarrollada con React native y Typescript, con el fin de poder tu pr
 <img src="/src/assets/imagesReadme/1.png" width="700" height="500"/>
 <img src="/src/assets/imagesReadme/3.jpg" width="700" height="500"/>
 <img src="/src/assets/imagesReadme/2.jpg" width="700" height="500"/>
-  
-  
 
+
+  <div align="center">
+  <b>📹Videos📹</b>
+</div>
+
+  
+[Navegación AppNotes](https://youtu.be/M2qu1XtIkcU)
   
   
   
