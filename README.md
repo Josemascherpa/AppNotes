@@ -29,7 +29,7 @@ Aplicacion desarrollada con React native y Typescript, con el fin de poder tu pr
   <b>:books: Librerias:</b>  
   <ul><li>Axios: utilizada para hacer consultas a la API y poder llevar a cabo la autenticacion y la comunicacion con la BD.<br></li>
   <li>RichEditor: utilizado para el manejo del editor de texto. </li>
-  <li>React Native Paper: utilizada para hacer uso de sus componentes y navigators.</li>
+  <li>React Native Paper: utilizada para hacer uso de sus componentes.</li>
   <li>Ionicons: para los iconos.</li>
   <li>Async Storage:para guardar datos en el movil.</li>
   </ul>            
