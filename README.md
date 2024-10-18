@@ -1,79 +1,44 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+<div align="center">
+  <h1>🗒️AppNotes📝</h1> 
+Aplicacion desarrollada con React native y Typescript, con el fin de poder tu propia cuenta para guardar tus notas con los apuntes que necesites para que nunca se te olviden!!
+</div>
 
-# Getting Started
+<div align="center">
+<b>Caracteristicas:</b>  
+</div>
+<div align="left">
+  <li> Crear, editar y eliminar notas fácilmente, con un editor de texto enriquecido para agregar detalles con formato. </li>
+  <li> Organizar tus ideas con títulos personalizados y contenido detallado. </li>
+  <li> Acceso rápido a tus notas en cualquier momento, asegurándote de que nunca olvides información importante. </li>
+  <li> Interfaz amigable y personalizable, diseñada para ofrecer una experiencia fluida y sencilla. </li>
+<br>
+  </div>
+<div align="center">
+  <img src="https://img.shields.io/badge/React%20Native-blue?style=flat&logo=react&logoColor=white">
+  <img src="https://img.shields.io/badge/TypeScript-F7DF1E?style=flat&logo=typescript&logoColor=white">  
+   <img src="https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white">
+<img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white">
+   <img src="https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white">
+  <img src="https://img.shields.io/badge/-GitHub-black?logo=github">
+</div>
+<br>
+  <b>:abcd:Stack:</b> ReactNative/Typescript.<br>
+  <b>:page_facing_up: Ide:</b> Visual Studio Code.<br>  
+  <b>🗃️ Base de datos:</b> MongoDB.<br>  
+  <b>🖥️ Backend:</b>Nodejs-Express<br>  
+  <b>:books: Librerias:</b>  
+  <ul><li>Axios: utilizada para hacer consultas a la API y poder llevar a cabo la autenticacion y la comunicacion con la BD.<br></li>
+  <li>RichEditor: utilizado para el manejo del editor de texto. </li>
+  <li>React Native Paper: utilizada para hacer uso de sus componentes y navigators.</li>
+  <li>Ionicons: para los iconos.</li>
+  <li>Async Storage:para guardar datos en el movil.</li>
+  </ul>            
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-## Step 1: Start the Metro Server
+  
+  
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+  
+  
+  
+  
