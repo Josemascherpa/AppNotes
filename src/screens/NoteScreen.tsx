@@ -1,5 +1,5 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { Dimensions, KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from 'react-native';
 import { RootStackParamList } from '../navigators/StackNavigators';
 import { TextInput } from 'react-native-paper';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -73,40 +73,42 @@ export const NoteScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <RichEditor
-        ref={editorRef}
-        initialContentHTML={content}
-        placeholder="Write something here..."
-        onChange={setContent}
-        editorStyle={{ backgroundColor: globalColors.backgroundColor }}
-        style={{flex:1}}
-      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{
-          position: 'absolute',
-          width: '100%',
-          bottom: 0,
-        }}
+        style={{ flex: 1 }}
       >
-        {title !== "" && (
-          <Pressable
-            onPress={async () => await handleRemoveNote()}
-            style={{
-              width: 52,
-              height: 50,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#cdcdcd",
-              borderRadius: 25,
-              position: "absolute",
-              bottom: 48,
-              right: 20,
-            }}
-          >
-            <Icon name="trash-outline" size={25} color="black" style={{ alignSelf: "center", paddingRight: 2 }} />
-          </Pressable>
-        )}        
+        <ScrollView 
+          style={{ flex: 1 }} 
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <RichEditor
+            ref={editorRef}
+            initialContentHTML={content}
+            placeholder="Write something here..."
+            onChange={setContent}
+            editorStyle={{ backgroundColor: globalColors.backgroundColor }}
+            style={{ flex: 1 }}
+          />
+          {title !== "" && (
+            <Pressable
+              onPress={async () => await handleRemoveNote()}
+              style={{
+                width: 52,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#cdcdcd",
+                borderRadius: 25,
+                position: "absolute",
+                bottom: 48,
+                right: 20,
+              }}
+            >
+              <Icon name="trash-outline" size={25} color="black" style={{ alignSelf: "center", paddingRight: 2 }} />
+            </Pressable>
+          )}
+        </ScrollView>
         <RichToolbar editor={editorRef} />
       </KeyboardAvoidingView>
     </View>
