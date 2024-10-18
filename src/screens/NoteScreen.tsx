@@ -1,7 +1,7 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { Dimensions, KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
 import { RootStackParamList } from '../navigators/StackNavigators';
-import { Text, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { debounce } from 'lodash';
 import { addNote, getNotes, removeNote, updateNote } from '../context/notesStore';
